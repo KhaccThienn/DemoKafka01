@@ -37,15 +37,14 @@ namespace KafkaConsumerWorker.Services
 
                         var product = JsonConvert.DeserializeObject<Product>(productJson);
                         string productInfomation = $"[Product Name: {product.Name} - Price: {product.Price} - Description: {product.Description}]";
-                        Console.WriteLine($"Consumed product: {productInfomation} [ at {consumeResult.TopicPartition} ]");
-                        using (var scope = _serviceProvider.CreateScope())
-                        {
-                            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                            dbContext.Products.Add(product);
-                            await dbContext.SaveChangesAsync();
+                        await Console.Out.WriteLineAsync($"Consumed product: {productInfomation} [ at {consumeResult.TopicPartition} ]");
 
-                            await Console.Out.WriteLineAsync($"Added {product.Name} into database");
-                        }
+                        using var scope = _serviceProvider.CreateScope();
+                        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                        dbContext.Products.Add(product);
+                        await dbContext.SaveChangesAsync();
+
+                        await Console.Out.WriteLineAsync($"Added {product.Name} into database");
                     }
                 }
                 catch (Exception ex)
