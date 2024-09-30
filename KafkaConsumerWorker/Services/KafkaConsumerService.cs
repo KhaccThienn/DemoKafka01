@@ -21,7 +21,8 @@ namespace KafkaConsumerWorker.Services
             {
                 GroupId = "product-consumer-group-1",
                 BootstrapServers = _bootstrapServers,
-                AutoOffsetReset = AutoOffsetReset.Earliest
+                AutoOffsetReset = AutoOffsetReset.Earliest,
+                AllowAutoCreateTopics = true
             };
 
             using (var consumer = new ConsumerBuilder<Null, string>(config).Build())
